@@ -71,6 +71,7 @@ h1 { margin: 0 0 14px; font-size: 28px; }
   left: 50%;
   top: 70%;
   transform: translate(-50%, -50%);
+  transition: left 180ms ease, top 180ms ease, opacity 160ms ease;
 }
 
 .hint { margin: 18px 0 0; color: #6b7280; font-size: 13px; }
