@@ -1,67 +1,80 @@
 const yesBtn = document.getElementById("yesBtn");
-const noBtn  = document.getElementById("noBtn");
+const noBtn = document.getElementById("noBtn");
 const subtitle = document.getElementById("subtitle");
 const arena = document.getElementById("arena");
 const gif = document.getElementById("gif");
 
-let noDodges = 0;
+let noClicks = 0;
+let noMoves = 0;
 
 const noLines = [
   "No 😶",
   "Wait—are you sure? 😳",
-  "That seems… incorrect 🤨",
-  "Your cursor is looking kinda yes-ish 👀",
-  "Plot twist: the No button is shy 🫣",
-  "Okay but what if I said please? 🥺",
-  "This is getting embarrassing for No 😭",
+  "Are you super sure? 🫢",
+  "Last chance... really? 😬",
+  "This feels like a yes moment 👀",
+  "Okay but hear me out 🥺",
+  "No is getting shy now 🫣",
   "No has left the chat 🏃‍♂️💨"
 ];
 
+const noMoveThreshold = 4;
+
+function updateNoText() {
+  const idx = Math.min(noClicks, noLines.length - 1);
+  noBtn.textContent = noLines[idx];
+}
+
 function moveNoButton() {
-  const pad = 12;
+  const pad = 10;
 
   const arenaRect = arena.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
 
-  const maxX = arenaRect.width - btnRect.width - pad;
-  const maxY = arenaRect.height - btnRect.height - pad;
+  const maxX = Math.max(pad, arenaRect.width - btnRect.width - pad);
+  const maxY = Math.max(pad, arenaRect.height - btnRect.height - pad);
 
   const x = Math.max(pad, Math.floor(Math.random() * maxX));
   const y = Math.max(pad, Math.floor(Math.random() * maxY));
 
   noBtn.style.left = `${x}px`;
-  noBtn.style.top  = `${y}px`;
+  noBtn.style.top = `${y}px`;
   noBtn.style.transform = "translate(0, 0)";
+  noMoves += 1;
 }
 
-function updateNoText() {
-  const idx = Math.min(noDodges, noLines.length - 1);
-  noBtn.textContent = noLines[idx];
+function shouldDodge() {
+  return noClicks >= noMoveThreshold;
 }
 
-noBtn.addEventListener("mouseenter", () => {
-  noDodges++;
+noBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  noClicks += 1;
   updateNoText();
 
-  // Make it progressively harder
-  if (noDodges >= 3) noBtn.style.opacity = "0.85";
-  if (noDodges >= 5) noBtn.style.opacity = "0.70";
-  if (noDodges >= 7) noBtn.style.opacity = "0.55";
-
-  moveNoButton();
+  if (noClicks === noMoveThreshold) {
+    subtitle.textContent = "Okay, now the No button is getting shy…";
+    noBtn.style.opacity = "0.85";
+  }
 });
 
-noBtn.addEventListener("click", (e) => {
-  // In case they manage to click it, still block politely
-  e.preventDefault();
-  noDodges++;
-  updateNoText();
-  moveNoButton();
+arena.addEventListener("mousemove", (event) => {
+  if (!shouldDodge()) return;
+
+  const btnRect = noBtn.getBoundingClientRect();
+  const distanceX = Math.abs(event.clientX - (btnRect.left + btnRect.width / 2));
+  const distanceY = Math.abs(event.clientY - (btnRect.top + btnRect.height / 2));
+
+  if (distanceX < 80 && distanceY < 60) {
+    moveNoButton();
+    if (noMoves >= 4) noBtn.style.opacity = "0.7";
+  }
 });
 
 yesBtn.addEventListener("click", () => {
   subtitle.textContent = "YAY!! 🎉 Best decision ever 💞";
-  gif.src = "https://media.giphy.com/media/l0HlA1H74pKTmROyA/giphy.gif";
+  gif.src = "https://media.giphy.com/media/Y8WWU6yQa1hzO/giphy.gif";
+  gif.alt = "Penguins hugging";
   yesBtn.textContent = "Confirmed ✅";
   noBtn.style.display = "none";
 });
