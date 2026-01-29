@@ -73,7 +73,7 @@ arena.addEventListener("mousemove", (event) => {
 
 yesBtn.addEventListener("click", () => {
   subtitle.textContent = "YAY!! 🎉 Best decision ever 💞";
-  gif.src = "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHhodm00d29jbG1hOWQ2djdyb3BjMW9qeGxqNjR0NmVmN2s0eDZvcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tJJ7L31VvDa9PKjyT6/giphy.gif";
+  gif.src = "https://tenor.com/view/penguin-penguin-hug-hug-cuddle-gif-20715886";
   gif.alt = "Penguins hugging";
   yesBtn.textContent = "Confirmed ✅";
   noBtn.style.display = "none";
